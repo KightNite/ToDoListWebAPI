@@ -8,18 +8,18 @@ namespace ToDoListWebAPI.Repository.Services;
 
 public class ToDoListRepository: IToDoListRepository
 {
-    protected readonly ToDoContext _context;
-    protected readonly DbSet<ToDoList> RepoDbSet;
+    private readonly ToDoContext _context;
+    private readonly DbSet<ToDoList> _repoDbSet;
 
     public ToDoListRepository(ToDoContext toDoContext)
     {
         _context = toDoContext;
-        RepoDbSet = _context.Set<ToDoList>();
+        _repoDbSet = _context.Set<ToDoList>();
     }
-    
-    protected virtual IQueryable<ToDoList> CreateQuery(bool noTracking = true)
+
+    private IQueryable<ToDoList> CreateQuery(bool noTracking = true)
     {
-        var query = RepoDbSet.AsQueryable();
+        var query = _repoDbSet.AsQueryable();
         if (noTracking)
         {
             query = query.AsNoTracking();
@@ -30,7 +30,7 @@ public class ToDoListRepository: IToDoListRepository
     
     public ToDoListDto Add(ToDoListDto entity)
     {
-        return DtoConverter.ToToDoListDto(RepoDbSet.Add(
+        return DtoConverter.ToToDoListDto(_repoDbSet.Add(
                 new ToDoList{
                     Title = entity.Title
                 }
@@ -41,21 +41,18 @@ public class ToDoListRepository: IToDoListRepository
     public ToDoListDto? Update(ToDoListDto entity)
     {
         var result = CreateQuery(false).FirstOrDefault(item => item.Id == entity.Id);
-        if (result != null)
-        {
-            result.Title = entity.Title;
-            _context.Entry(result).State = EntityState.Modified;
-            _context.SaveChanges();
+        if (result == null) return null;
+        
+        result.Title = entity.Title;
+        _context.Entry(result).State = EntityState.Modified;
+        _context.SaveChanges();
 
-            return DtoConverter.ToToDoListDto(result);
-        }
-
-        return null;
+        return DtoConverter.ToToDoListDto(result);
     }
 
     public ToDoListDto Remove(ToDoList entity)
     {
-        var toDoItem = RepoDbSet.Remove(entity).Entity;
+        var toDoItem = _repoDbSet.Remove(entity).Entity;
         if (!toDoItem.ToDoItems.IsNullOrEmpty())
         {
             toDoItem.ToDoItems!.Clear();
@@ -95,16 +92,16 @@ public class ToDoListRepository: IToDoListRepository
 
     public bool Exists(int id)
     {
-        return RepoDbSet.Any(e => e.Id == id);
+        return _repoDbSet.Any(e => e.Id == id);
     }
 
     public async Task<ToDoListDto> AddAsync(ToDoListDto entity)
     {
 
-        var result = (await RepoDbSet.AddAsync(
+        var result = (await _repoDbSet.AddAsync(
             new ToDoList
             {
-                Title = entity.Title,
+                Title = entity.Title
             }
         )).Entity;
         await _context.SaveChangesAsync();
@@ -114,17 +111,14 @@ public class ToDoListRepository: IToDoListRepository
     public async Task<ToDoListDto?> UpdateAsync(ToDoListDto entity)
     {
         var result = await CreateQuery(false).FirstOrDefaultAsync(item => item.Id == entity.Id);
-        if (result != null)
-        {
-            result.Title = entity.Title;
+        if (result == null) return null;
+        
+        result.Title = entity.Title;
 
-            RepoDbSet.Entry(result).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+        _repoDbSet.Entry(result).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
 
-            return DtoConverter.ToToDoListDto(result);
-        }
-
-        return null;
+        return DtoConverter.ToToDoListDto(result);
     }
 
     public async Task<ToDoListDto?> FirstOrDefaultAsync(int id, bool noTracking = true)
@@ -147,7 +141,7 @@ public class ToDoListRepository: IToDoListRepository
 
     public async Task<bool> ExistsAsync(int id)
     {
-        return await RepoDbSet.AnyAsync(e => e.Id == id);
+        return await _repoDbSet.AnyAsync(e => e.Id == id);
     }
 
     public async Task<ToDoListDto> RemoveAsync(int id)

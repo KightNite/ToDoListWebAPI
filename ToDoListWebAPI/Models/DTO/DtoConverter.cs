@@ -21,7 +21,7 @@ public static class DtoConverter
         ICollection<ToDoItemDto>? toDoItemDtos = null;
         if (!toDoList.ToDoItems.IsNullOrEmpty())
         {
-            toDoItemDtos = toDoList.ToDoItems!.Select(DtoConverter.ToToDoItemDto).ToList();
+            toDoItemDtos = toDoList.ToDoItems!.Select(ToToDoItemDto).ToList();
         }
         
         return new ToDoListDto(

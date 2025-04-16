@@ -3,7 +3,7 @@ using ToDoListWebAPI.Models.DTO;
 
 namespace ToDoListWebAPI.Repository.Interfaces;
 
-public interface IToDoListRepository: IEntityRepository<ToDoListDto, ToDoList, int>
+public interface IToDoListRepository : IEntityRepository<ToDoListDto, ToDoList, int>
 {
     
 }

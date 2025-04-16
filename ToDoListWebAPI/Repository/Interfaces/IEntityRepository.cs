@@ -1,6 +1,6 @@
-namespace ToDoListWebAPI.Repository;
+namespace ToDoListWebAPI.Repository.Interfaces;
 
-public interface IEntityRepository<TDtoEntity,TDomainEntity, TKey>
+public interface IEntityRepository<TDtoEntity, TDomainEntity, TKey>
     where TKey : IEquatable<TKey>
 {
     // sync
