@@ -77,6 +77,37 @@ public class UnitTestToDoListController
     }
     
     [Fact]
+    public async Task Test_GetListById_Returns_List_With_Tasks()
+    {
+        string title = "Test Title";
+        var data = _context.TodoLists.Add(new ToDoList
+        {
+            Title = title
+        }).Entity;
+        _context.TodoItems.Add(new ToDoItem
+        {
+            Title = "test1",
+            ToDoListId = data.Id
+        });
+        _context.TodoItems.Add(new ToDoItem
+        {
+            Title = "test2",
+            ToDoListId = data.Id
+        });
+        await _context.SaveChangesAsync();
+        _context.Entry(data).State = EntityState.Detached;
+        
+        _testOutputHelper.WriteLine($"Created id: {data.Id}");
+        
+        var response = await _toDoListController.GetToDoList(data.Id);
+        
+        Assert.NotNull(response.Value);
+        Assert.Equal(data.Id, response.Value.Id);
+        Assert.NotNull(response.Value.ToDoItems);
+        Assert.Equal(2, response.Value.ToDoItems.Count);
+    }
+    
+    [Fact]
     public async Task Test_GetListById_Return_NotFound()
     {
         var response = await _toDoListController.GetToDoList(-1);
