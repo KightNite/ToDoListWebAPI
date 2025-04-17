@@ -3,6 +3,7 @@
 A WebAPI for a ToDo List application using .NET 9.0.
 
 <h2>Running locally</h2>
+
 Run the following command to start in http profile.
 ```
 dotnet run --project .\ToDoListWebAPI\ToDoListWebAPI.csproj --launch-profile http
