@@ -159,7 +159,8 @@ public class ToDoItemController : ControllerBase
     /// <summary>
     /// Creates a TodoItem.
     /// </summary>
-    /// <param name="toDoItemDto"></param>
+    /// <param name="toDoItemDto">ToDoItem object.
+    /// If "toDoListId" is null, the item is assigned to the default list.</param>
     /// <returns>A newly created TodoItem</returns>
     /// <remarks>
     /// Sample request:

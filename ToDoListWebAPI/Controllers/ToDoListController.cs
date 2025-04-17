@@ -137,6 +137,7 @@ public class ToDoListController : ControllerBase
 
     /// <summary>
     /// Deletes specified ToDoList.
+    /// ToDoItems assigned to this list will be assigned to the default list.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
