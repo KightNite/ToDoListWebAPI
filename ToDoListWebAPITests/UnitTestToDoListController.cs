@@ -71,8 +71,6 @@ public class UnitTestToDoListController
         
         var response = await _toDoListController.GetToDoList(data.Id);
         
-        _testOutputHelper.WriteLine($"Created id: {data.Id}");
-        
         Assert.NotNull(response.Value);
         Assert.Equal(data.Id, response.Value.Id);
         Assert.Equal(title, response.Value.Title);
