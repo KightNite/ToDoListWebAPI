@@ -19,6 +19,7 @@ Run the following command to run the tests.
 dotnet test .\ToDoListWebAPITests\ToDoListWebAPITests.csproj
 ```
 <h2>Endpoints</h2>
+
 Endpoint documentation is available at `https://localhost:<port>/swagger/index.html`
 <h3>ToDoItem</h3>
 
